@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global AI Learning Hub - AI Capability Self-Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Noto+Sans+TC:wght@700;900&display=swap');
+        
+        body { 
+            font-family: 'Nunito', 'Noto Sans TC', sans-serif; 
+        }
+
+        /* 活潑的網格背景 (參照學習地圖風格) */
+        .bg-grid-pattern {
+            background-color: #38bdf8; /* 水藍色底 */
+            background-image: 
+                linear-gradient(white 2px, transparent 2px),
+                linear-gradient(90deg, white 2px, transparent 2px);
+            background-size: 40px 40px;
+            background-position: center center;
+        }
+
+        /* 粗框活潑卡片 (Neo-brutalism) */
+        .comic-card {
+            background-color: white;
+            border: 4px solid #0f172a;
+            border-radius: 1.5rem;
+            box-shadow: 8px 8px 0px #0f172a;
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .comic-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px #0f172a;
+        }
+
+        /* 紅色 3D START 按鈕 */
+        .btn-start-3d {
+            background-color: #ef4444;
+            color: white;
+            border: 3px solid #0f172a;
+            box-shadow: 0px 6px 0px #991b1b, 0px 6px 0px 3px #0f172a;
+            transition: all 0.1s ease;
+        }
+        .btn-start-3d:active {
+            transform: translateY(6px);
+            box-shadow: 0px 0px 0px #991b1b, 0px 0px 0px 3px #0f172a;
+        }
+
+        /* 測驗選項按鈕：極強烈的對比設計 */
+        .option-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* 預設狀態 */
+        .option-btn.default-state {
+            border: 4px solid #e2e8f0;
+            background-color: white;
+            color: #94a3b8;
+            transform: scale(1);
+            opacity: 1;
+        }
+        .option-btn.default-state:hover {
+            border-color: #93c5fd;
+            color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        /* 選中狀態：極度明顯的反藍、放大、發光陰影、粗框 */
+        .option-btn.selected-state {
+            border: 4px solid #1d4ed8;
+            background-color: #2563eb;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(37,99,235,0.6);
+            z-index: 10;
+        }
+        /* 未選中(被排擠)狀態：縮小、變灰、半透明 */
+        .option-btn.unselected-state {
+            border: 2px solid #f1f5f9;
+            background-color: #f8fafc;
+            color: #cbd5e1;
+            transform: scale(0.95);
+            opacity: 0.4;
+            filter: grayscale(100%);
+            pointer-events: auto; /* 仍可點擊切換 */
+        }
+
+        .fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-100">
+
+    <!-- 網格主背景區域 -->
+    <div class="bg-grid-pattern flex-grow w-full relative pb-20">
+        
+        <!-- Header -->
+        <header class="bg-white border-b-4 border-slate-900 sticky top-0 z-50 shadow-md">
+            <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="showView('home-view')">
+                    <div class="bg-slate-900 p-2 rounded-lg text-white group-hover:-rotate-12 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight flex items-baseline flex-wrap gap-x-2">
+                        AI 實戰力自我檢測
+                        <span class="text-sm md:text-lg font-bold text-slate-400 tracking-normal">| AI Capability Self-Assessment</span>
+                    </h1>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+
+            <!-- ================= VIEW 1: HOME (4A CARDS) ================= -->
+            <div id="home-view" class="fade-in block">
+                
+                <!-- 引言白板 -->
+                <div class="comic-card max-w-4xl mx-auto mb-16 p-8 md:p-10 text-center relative overflow-hidden bg-white">
+                    <div class="absolute top-4 left-4 text-4xl">📍</div>
+                    <h2 class="text-3xl md:text-4xl font-black text-slate-900 mb-4 tracking-tight">Curious about your AI capability level?</h2>
+                    <h3 class="text-xl md:text-2xl font-bold text-slate-700 mb-6">想知道你的 AI 程度在哪個等級嗎？</h3>
+                    <div class="text-base md:text-lg text-slate-800 font-bold bg-yellow-100 inline-block px-6 py-3 rounded-xl border-2 border-slate-300">
+                        <p class="mb-1 tracking-wide">Take this quick 5-question quiz to clarify your competency standing and find your perfect starting point!</p>
+                        <p class="text-slate-500">透過簡單的 5 題測驗，快速釐清你的職能落點，找到最適合你的學習起點！</p>
+                    </div>
+                </div>
+
+                <!-- 4A 活潑卡片網格 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
+                    
+                    <!-- A1 Card -->
+                    <div class="comic-card p-6 flex flex-col items-center text-center bg-white h-full">
+                        <h2 class="text-3xl font-black text-slate-900 mb-1">A1 Level</h2>
+                        <h3 class="text-lg font-black text-cyan-600 mb-1">Awareness & Application</h3>
+                        <h4 class="text-md font-bold text-slate-700 mb-6">基礎應用</h4>
+                        
+                        <p class="text-slate-600 font-bold text-sm mb-3">Understand GenAI concepts to boost your work efficiency.</p>
+                        <p class="text-slate-600 font-bold text-sm mb-8">能掌握 GenAI 概念，應用於日常以提升個人工作效率</p>
+                        
+                        <button onclick="startQuiz('A1')" class="btn-start-3d mt-auto w-32 py-3 rounded-full font-black text-xl tracking-widest cursor-pointer">
+                            START
+                        </button>
+                    </div>
+
+                    <!-- A2 Card -->
+                    <div class="comic-card p-6 flex flex-col items-center text-center bg-white h-full">
+                        <h2 class="text-3xl font-black text-slate-900 mb-1">A2 Level</h2>
+                        <h3 class="text-lg font-black text-emerald-600 mb-1">Advanced Application</h3>
+                        <h4 class="text-md font-bold text-slate-700 mb-6">進階應用</h4>
+                        
+                        <p class="text-slate-600 font-bold text-sm mb-3">Leverage AI for complex problem solving and workflow optimization.</p>
+                        <p class="text-slate-600 font-bold text-sm mb-8">運用 AI 解決複雜問題，優化工作流程</p>
+                        
+                        <button onclick="startQuiz('A2')" class="btn-start-3d mt-auto w-32 py-3 rounded-full font-black text-xl tracking-widest cursor-pointer">
+                            START
+                        </button>
+                    </div>
+
+                    <!-- A3 Card -->
+                    <div class="comic-card p-6 flex flex-col items-center text-center bg-white h-full">
+                        <h2 class="text-3xl font-black text-slate-900 mb-1">A3 Level</h2>
+                        <h3 class="text-lg font-black text-orange-600 mb-1">AI Development</h3>
+                        <h4 class="text-md font-bold text-slate-700 mb-6">模型開發</h4>
+                        
+                        <p class="text-slate-600 font-bold text-sm mb-3">Utilize coding skills for custom model development and fine-tuning.</p>
+                        <p class="text-slate-600 font-bold text-sm mb-8">具備程式開發技能，建置 RAG 系統與微調模型</p>
+                        
+                        <button onclick="startQuiz('A3')" class="btn-start-3d mt-auto w-32 py-3 rounded-full font-black text-xl tracking-widest cursor-pointer">
+                            START
+                        </button>
+                    </div>
+
+                    <!-- A4 Card -->
+                    <div class="comic-card p-6 flex flex-col items-center text-center bg-white h-full">
+                        <h2 class="text-3xl font-black text-slate-900 mb-1">A4 Level</h2>
+                        <h3 class="text-lg font-black text-indigo-600 mb-1">Architecture</h3>
+                        <h4 class="text-md font-bold text-slate-700 mb-6">系統架構</h4>
+                        
+                        <p class="text-slate-600 font-bold text-sm mb-3">Design enterprise AI system architecture and technical governance.</p>
+                        <p class="text-slate-600 font-bold text-sm mb-8">設計企業級 AI 系統架構，並定義技術治理策略</p>
+                        
+                        <button onclick="startQuiz('A4')" class="btn-start-3d mt-auto w-32 py-3 rounded-full font-black text-xl tracking-widest cursor-pointer">
+                            START
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ================= VIEW 2: QUIZ INTERFACE ================= -->
+            <div id="quiz-view" class="hidden fade-in max-w-4xl mx-auto pb-10">
+                <div class="comic-card overflow-hidden bg-white">
+                    <!-- Header -->
+                    <div class="bg-white border-b-4 border-slate-900 px-8 py-6 flex justify-between items-center">
+                        <div class="flex items-center gap-4">
+                            <span id="quiz-level-badge" class="bg-slate-900 text-white font-black px-4 py-2 rounded-xl text-xl border-2 border-slate-900">A1</span>
+                            <h2 id="quiz-title" class="text-2xl font-black text-slate-800">基礎應用</h2>
+                        </div>
+                        <button onclick="showView('home-view')" class="font-bold text-slate-500 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-lg transition-colors border-2 border-transparent hover:border-slate-900">
+                            ✖ 取消測驗
+                        </button>
+                    </div>
+
+                    <!-- Progress -->
+                    <div class="bg-slate-50 px-8 py-4 border-b-4 border-slate-900">
+                        <div class="h-4 w-full bg-white rounded-full border-2 border-slate-900 overflow-hidden">
+                            <div id="quiz-progress-bar" class="h-full bg-cyan-400 transition-all duration-500 w-0 border-r-2 border-slate-900"></div>
+                        </div>
+                    </div>
+
+                    <!-- Questions Container -->
+                    <div id="questions-area" class="p-8 sm:p-12 space-y-16 bg-white">
+                        <!-- Questions will be injected here -->
+                    </div>
+
+                    <!-- Submit Footer -->
+                    <div class="px-8 py-8 bg-slate-100 border-t-4 border-slate-900 text-center">
+                        <button id="submit-btn" onclick="submitQuiz()" disabled class="btn-start-3d w-full max-w-sm py-4 rounded-xl font-black text-2xl tracking-widest disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed">
+                            SUBMIT 送出
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= VIEW 3: RESULT ================= -->
+            <div id="result-view" class="hidden fade-in max-w-2xl mx-auto">
+                <div class="comic-card p-12 text-center bg-white" id="result-card">
+                    
+                    <div id="result-icon-box" class="mx-auto w-32 h-32 rounded-3xl border-4 border-slate-900 flex items-center justify-center mb-8 shadow-[8px_8px_0px_#0f172a]">
+                        <!-- Dynamic Icon -->
+                    </div>
+
+                    <h2 class="text-xl font-black text-slate-500 mb-2 uppercase tracking-widest">Final Score</h2>
+                    <h1 id="result-score-val" class="text-8xl font-black text-slate-900 mb-8 drop-shadow-md">4/5</h1>
+
+                    <div id="result-message-box" class="bg-yellow-100 rounded-2xl border-4 border-slate-900 p-8 mb-10 text-left shadow-[6px_6px_0px_#0f172a]">
+                        <!-- Message goes here -->
+                    </div>
+
+                    <div class="flex flex-col gap-4">
+                        <button id="result-action-btn" class="w-full py-4 border-4 border-slate-900 font-black text-xl rounded-xl transition-all shadow-[4px_4px_0px_#0f172a] hover:translate-y-1 hover:shadow-[0px_0px_0px_#0f172a] active:translate-y-2">
+                            <!-- Action text -->
+                        </button>
+                        <button onclick="showView('home-view')" class="w-full py-4 bg-white border-4 border-slate-900 font-black text-xl text-slate-700 rounded-xl transition-all shadow-[4px_4px_0px_#0f172a] hover:bg-slate-50 hover:translate-y-1 hover:shadow-[0px_0px_0px_#0f172a]">
+                            BACK 回首頁
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white py-6 text-center border-t-8 border-slate-700">
+        <p class="text-sm font-bold tracking-widest uppercase">
+            ⚠️ 守護數據安全：嚴禁將任何公司內部檔案、程式碼或敏感資訊上傳至外部 AI 工具。
+        </p>
+    </footer>
+
+    <script>
+        // --- QUIZ DATA ---
+        const quizData = {
+            'A1': { title: 'Awareness & Application 基礎應用', questions: [
+                { q_en: "I clearly understand the basic concepts of Generative AI (GenAI) and its potential tasks.", q_zh: "我清楚知道生成式 AI (GenAI) 的基礎概念及其能協助處理的任務。" },
+                { q_en: "I use AI tools (e.g., Copilot, Jarvis) at least once a week for my daily work.", q_zh: "我每週至少使用一次 AI 工具（如 Copilot, Jarvis）來輔助日常工作。" },
+                { q_en: "I know the company's \"security red lines\" regarding external AI tools.", q_zh: "我知道公司對於使用外部 AI 工具的「資安紅線」與保密規範。" },
+                { q_en: "I can write clear prompts for AI to complete translations or meeting summaries.", q_zh: "我能下達明確的指令 (Prompt)，讓 AI 幫我完成翻譯、潤飾或會議摘要。" },
+                { q_en: "I believe AI tools have substantially improved my personal productivity.", q_zh: "我認為 AI 工具已經實質提升了我的個人工作效率。" }
+            ]},
+            'A2': { title: 'Advanced Application 進階應用', questions: [
+                { q_en: "I am familiar with advanced Prompt Engineering for complex results.", q_zh: "我熟悉「提示工程 (Prompt Engineering)」的高級技巧，能引導 AI 產出複雜且精準的結果。" },
+                { q_en: "I use AI to process reports and extract insights from data analysis.", q_zh: "我能運用 AI 工具處理報表、數據分析，並從中萃取有價值的洞察。" },
+                { q_en: "I use No-code tools (e.g., Power Automate) with AI to automate workflows.", q_zh: "我曾嘗試或已經使用 No-code 工具（如 Power Automate）結合 AI 來自動化日常工作流程。" },
+                { q_en: "I can identify process pain points and evaluate AI suitability.", q_zh: "我能主動發掘部門內的流程痛點，並評估是否適合導入 AI 解決。" },
+                { q_en: "I can independently use AI to solve unstructured business problems.", q_zh: "我能獨立運用 AI 解決非結構化的複雜業務問題。" }
+            ]},
+            'A3': { title: 'AI Development 模型開發', questions: [
+                { q_en: "I have practical coding skills in Python or other languages.", q_zh: "我具備 Python 或其他程式語言的實務開發能力。" },
+                { q_en: "I understand ML principles and know how to perform model fine-tuning.", q_zh: "我了解機器學習的基礎原理，並知道如何進行模型微調。" },
+                { q_en: "I have experience in building RAG systems.", q_zh: "我具備建置 RAG（檢索增強生成）系統的概念或實務經驗。" },
+                { q_en: "I can develop custom AI apps by integrating LLM APIs.", q_zh: "我能透過串接大型語言模型 (LLM) 的 API，開發客製化的 AI 應用程式。" },
+                { q_en: "I can lead the development and testing of Edge AI or proprietary models.", q_zh: "我能獨立或領導小組，完成邊緣 AI 或專屬模型的開發與測試。" }
+            ]},
+            'A4': { title: 'Architecture 系統架構', questions: [
+                { q_en: "I can design enterprise-scale software or AI system architectures.", q_zh: "我具備設計企業級軟體或 AI 系統架構的能力。" },
+                { q_en: "I am familiar with cloud AI infrastructure and compute resource planning.", q_zh: "我熟悉雲端 AI 基礎設施與底層算力資源的規劃。" },
+                { q_en: "I can establish enterprise-level AI governance and security strategies.", q_zh: "我能制定企業層級的 AI 技術治理、合規性與資訊安全策略。" },
+                { q_en: "I can lead cross-departmental AI projects integrating tech and business goals.", q_zh: "我能主導跨部門的 AI 專案架構，整合技術發展與業務目標。" },
+                { q_en: "I can evaluate ROI and long-term roadmaps for AI infrastructure.", q_zh: "我能評估各類 AI 基礎建設導入的投資報酬率與長遠技術藍圖。" }
+            ]}
+        };
+
+        let currentLevel = null;
+        let answers = {};
+
+        function showView(viewId) {
+            ['home-view', 'quiz-view', 'result-view'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+            window.scrollTo(0, 0);
+        }
+
+        function startQuiz(level) {
+            currentLevel = level;
+            answers = {};
+            const data = quizData[level];
+            
+            document.getElementById('quiz-level-badge').innerText = level;
+            document.getElementById('quiz-title').innerText = data.title;
+
+            const area = document.getElementById('questions-area');
+            area.innerHTML = '';
+            
+            data.questions.forEach((q, i) => {
+                const qNum = i + 1;
+                const div = document.createElement('div');
+                div.className = "flex flex-col md:flex-row gap-6 items-start";
+                div.innerHTML = `
+                    <div class="flex-shrink-0">
+                        <div class="w-14 h-14 bg-slate-900 text-white rounded-full flex items-center justify-center font-black text-2xl border-4 border-slate-900 shadow-[4px_4px_0px_#38bdf8]">
+                            ${qNum}
+                        </div>
+                    </div>
+                    <div class="flex-grow w-full">
+                        <p class="text-2xl font-black text-slate-900 leading-tight mb-2">${q.q_en}</p>
+                        <p class="text-slate-600 font-bold mb-6 text-lg">${q.q_zh}</p>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Yes 按鈕 -->
+                            <button onclick="handleSelect(${qNum}, true)" id="btn-yes-${qNum}" class="option-btn default-state py-4 px-2 rounded-2xl font-black text-xl flex flex-col items-center justify-center">
+                                <span class="text-2xl mb-1 block leading-none">✅</span> YES 是
+                            </button>
+                            
+                            <!-- No 按鈕 -->
+                            <button onclick="handleSelect(${qNum}, false)" id="btn-no-${qNum}" class="option-btn default-state py-4 px-2 rounded-2xl font-black text-xl flex flex-col items-center justify-center">
+                                <span class="text-2xl mb-1 block leading-none">❌</span> NO 否
+                            </button>
+                        </div>
+                    </div>
+                `;
+                area.appendChild(div);
+            });
+            updateProgress();
+            showView('quiz-view');
+        }
+
+        function handleSelect(qNum, value) {
+            answers[qNum] = value;
+            
+            const yesBtn = document.getElementById(`btn-yes-${qNum}`);
+            const noBtn = document.getElementById(`btn-no-${qNum}`);
+            
+            // 清除所有狀態 class
+            yesBtn.classList.remove('default-state', 'selected-state', 'unselected-state');
+            noBtn.classList.remove('default-state', 'selected-state', 'unselected-state');
+
+            // 重新賦予極端對比的 class
+            if (value === true) {
+                yesBtn.classList.add('selected-state');
+                noBtn.classList.add('unselected-state');
+            } else {
+                noBtn.classList.add('selected-state');
+                yesBtn.classList.add('unselected-state');
+            }
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(answers).length;
+            const perc = (answered / 5) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${perc}%`;
+            document.getElementById('submit-btn').disabled = answered < 5;
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            Object.values(answers).forEach(v => { if(v) score++; });
+            const isPass = score >= 4;
+            
+            document.getElementById('result-score-val').innerText = `${score}/5`;
+            
+            const iconBox = document.getElementById('result-icon-box');
+            const msgBox = document.getElementById('result-message-box');
+            const actionBtn = document.getElementById('result-action-btn');
+            
+            if (isPass) {
+                iconBox.className = "mx-auto w-32 h-32 rounded-3xl border-4 border-slate-900 flex items-center justify-center mb-8 bg-green-400 text-slate-900 shadow-[8px_8px_0px_#0f172a] animate-bounce";
+                iconBox.innerHTML = "🌟";
+                iconBox.style.fontSize = "4rem";
+                
+                msgBox.className = "bg-green-100 rounded-2xl border-4 border-slate-900 p-8 mb-10 text-left shadow-[6px_6px_0px_#0f172a]";
+                
+                // 針對最高等級 A4 的專屬祝賀訊息
+                if (currentLevel === 'A4') {
+                    msgBox.innerHTML = `
+                        <p class="text-3xl font-black text-slate-900 mb-2">Congratulations! 🎉</p>
+                        <p class="text-slate-800 font-bold text-xl mb-1">Your AI proficiency has reached the A4 Level. Amazing job!</p>
+                        <p class="text-slate-700 font-bold">你的 AI 能力已經達到 A4 Level，非常厲害，趕快跟你的同事們傳授技巧吧！</p>
+                    `;
+                } else {
+                    msgBox.innerHTML = `
+                        <p class="text-3xl font-black text-slate-900 mb-2">Congratulations! 🎉</p>
+                        <p class="text-slate-800 font-bold text-xl mb-1">Your AI proficiency has reached the ${currentLevel} Level.</p>
+                        <p class="text-slate-700 font-bold">你的 AI 能力已經達到 ${currentLevel} Level，可以繼續往更高的 Level 挑戰喔！</p>
+                    `;
+                }
+                
+                actionBtn.innerText = "NEXT CHALLENGE 下一步挑戰 🚀";
+                actionBtn.className = "w-full py-5 bg-blue-500 text-white font-black text-2xl rounded-xl border-4 border-slate-900 shadow-[4px_4px_0px_#0f172a] hover:translate-y-1 hover:shadow-[0px_0px_0px_#0f172a] active:translate-y-2 transition-all";
+                
+                const levels = ['A1', 'A2', 'A3', 'A4'];
+                const nextIdx = levels.indexOf(currentLevel) + 1;
+                if (nextIdx < levels.length) {
+                    actionBtn.onclick = () => startQuiz(levels[nextIdx]);
+                } else {
+                    actionBtn.innerText = "YOU ARE AN EXPERT! 🏆";
+                    actionBtn.onclick = () => showView('home-view');
+                }
+            } else {
+                iconBox.className = "mx-auto w-32 h-32 rounded-3xl border-4 border-slate-900 flex items-center justify-center mb-8 bg-red-400 text-slate-900 shadow-[8px_8px_0px_#0f172a]";
+                iconBox.innerHTML = "💪";
+                iconBox.style.fontSize = "4rem";
+                
+                msgBox.className = "bg-red-100 rounded-2xl border-4 border-slate-900 p-8 mb-10 text-left shadow-[6px_6px_0px_#0f172a]";
+                msgBox.innerHTML = `
+                    <p class="text-3xl font-black text-slate-900 mb-2">Keep it up! 持續努力！</p>
+                    <p class="text-slate-800 font-bold text-xl mb-1">Let's build your AI capabilities starting from the ${currentLevel} Level.</p>
+                    <p class="text-slate-700 font-bold">你的 AI 能力建議可以從 ${currentLevel} Level 再持續努力哦！</p>
+                `;
+                
+                // 需求 3：未通過邏輯調整 -> 導向 DMS 連結
+                actionBtn.innerText = "回到學習資源專區 📚";
+                actionBtn.className = "w-full py-5 bg-yellow-400 text-slate-900 font-black text-2xl rounded-xl border-4 border-slate-900 shadow-[4px_4px_0px_#0f172a] hover:translate-y-1 hover:shadow-[0px_0px_0px_#0f172a] active:translate-y-2 transition-all";
+                actionBtn.onclick = () => window.open('https://dms.deltaww.com/communityweb/en-us/Community/Reply?topicId=311830', '_blank');
+            }
+
+            showView('result-view');
+        }
+
+        // --- URL 參數路由邏輯 (Deep Linking) ---
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const levelParam = urlParams.get('level'); 
+            
+            const validLevels = ['A1', 'A2', 'A3', 'A4'];
+            
+            if (levelParam && validLevels.includes(levelParam.toUpperCase())) {
+                startQuiz(levelParam.toUpperCase());
+            } else {
+                showView('home-view');
+            }
+        });
+    </script>
+</body>
+</html>
